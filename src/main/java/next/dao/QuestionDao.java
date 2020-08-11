@@ -5,15 +5,43 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
-import core.jdbc.JdbcTemplate;
-import core.jdbc.KeyHolder;
-import core.jdbc.PreparedStatementCreator;
-import core.jdbc.RowMapper;
+import core.jdbc.*;
 import next.model.Question;
 
 public class QuestionDao {
+
+    public void update(long questionId, int countOfComment){
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET countOfAnswer = ? WHERE questionId = ?";
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setParameters(PreparedStatement pstmt) throws SQLException {
+                pstmt.setInt(1,countOfComment);
+                pstmt.setLong(2, questionId);
+            }
+        };
+        jdbcTemplate.update(sql,pss);
+    }
+
+    public void update(long questionId, String title, String contents) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET title = ?, contents = ?, createdDate = ?  WHERE questionId = ?";
+        Date now = new Date();
+        PreparedStatementSetter pss = new PreparedStatementSetter() {
+            @Override
+            public void setParameters(PreparedStatement pstmt) throws SQLException {
+                pstmt.setString(1, title);
+                pstmt.setString(2,contents);
+                pstmt.setTimestamp(3, new Timestamp(now.getTime()));
+                pstmt.setLong(4, questionId);
+            }
+        };
+        jdbcTemplate.update(sql,pss);
+    }
+
     public Question insert(Question question) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "INSERT INTO QUESTIONS " + 

@@ -28,6 +28,7 @@ public class ShowController extends AbstractController {
         ModelAndView mav = jspView("/qna/show.jsp");
         mav.addObject("question", question);
         mav.addObject("answers", answers);
+        mav.addObject("countOfComment",question.getCountOfComment());
         return mav;
     }
 }
