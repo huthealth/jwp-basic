@@ -18,23 +18,17 @@ post /qna/create url ->
 	QuestionDao를 통해 DB에 저장
 	/ URL 로 리다이렉트
  */
-public class AddQuestionController extends AbstractController {
+public class CreateQuestionController extends AbstractController {
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if(request.getMethod().equals("GET")){
-            if(!UserSessionUtils.isLogined(request.getSession())){
-                return jspView("redirect:/users/loginForm");
-            }
-            User user = (User)request.getSession().getAttribute("user");
-            ModelAndView mav = jspView("/qna/form.jsp");
-            mav.addObject("user",user);
-            //request.setAttribute("user",user);
-            return mav;
+        if (!UserSessionUtils.isLogined(request.getSession())) {
+            return jspView("redirect:/users/loginForm");
         }
 
         Question question = new Question(request.getParameter("writer"),request.getParameter("title"),request.getParameter("contents"));
         QuestionDao questionDao = new QuestionDao();
         questionDao.insert(question);
         return jspView("redirect:/");
+
     }
 }

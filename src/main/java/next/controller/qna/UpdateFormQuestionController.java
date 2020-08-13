@@ -20,10 +20,11 @@ public class UpdateFormQuestionController extends AbstractController {
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        Question question = questionDao.findById(Long.parseLong(request.getParameter("questionId")));
         String writer = request.getParameter("writer");
         User user = UserSessionUtils.getUserFromSession(request.getSession());
+
         if(user.getName().equals(writer)){
+            Question question = questionDao.findById(Long.parseLong(request.getParameter("questionId")));
             return jspView("/qna/updateForm.jsp").addObject("question",question);
         }
         return jspView("redirect:/");
